@@ -1,0 +1,26 @@
+{
+    "USB": {
+        "status": "stop",
+        "date": null
+    },
+    "Ethernet": {
+        "status": "stop",
+        "date": null
+    },
+    "Fio I/O": {
+        "status": "stop",
+        "date": null
+    },
+    "Memory": {
+        "status": "stop",
+        "date": null
+    },
+    "Sysbench CPU": {
+        "status": "stop",
+        "date": null
+    },
+    "7zip": {
+        "status": "stop",
+        "date": null
+    }
+}
