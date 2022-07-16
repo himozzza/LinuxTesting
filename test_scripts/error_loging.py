@@ -1,5 +1,5 @@
 """Вызов интерпретатора."""
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import json
 import datetime
@@ -36,6 +36,7 @@ def status_file(test, value, time):
         status[test]['time'] = time
     with open('status.json', 'w', encoding='utf-8') as js_file:
         json.dump(status, js_file, indent=4)
+
 
 def datetime_func():
     """Получение актуального времени."""

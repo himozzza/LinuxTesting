@@ -47,7 +47,7 @@ def testing_mem():
     try:
         memtester = subprocess.check_output(
             [f'memtester {free_memory} 1'], stderr=subprocess.STDOUT, shell=True)
-        write_log(path_to_file='memtester.txt', test=memtester)
+#        write_log(path_to_file='memtester.txt', test=memtester)
 
     except subprocess.CalledProcessError as error:
         write_log(path_to_file='errors/memtester_errors.txt', test=error.output)
