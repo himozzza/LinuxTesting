@@ -1,4 +1,3 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import subprocess
@@ -8,7 +7,7 @@ import sys
 from time import sleep
 from threading import Thread
 
-from error_loging import datetime_func, input_err, status_file, write_log
+from test_scripts.error_loging import datetime_func, input_err, status_file, write_log
 
 
 curses.setupterm()
@@ -17,7 +16,8 @@ fd = sys.stdout.fileno()
 
 
 sensors_list = subprocess.check_output(
-    ['sensors | grep "Core [0-9]"'],shell=True).decode('utf8').split('\n')
+    ['sensors | grep "Core [0-9]"'],
+    shell=True).decode('utf8').split('\n')
 
 
 def temperature():
@@ -34,13 +34,17 @@ def testing():
     status_file('7zip', 'start', datetime_func())
     print(f"\n[{datetime_func()}] Тестирование CPU (7zip)...")
     try:
-        p7zip = subprocess.check_output(['7z b -md26'], stderr=subprocess.STDOUT, shell=True)
+        p7zip = subprocess.check_output(
+            ['7z b -md26'],
+            stderr=subprocess.STDOUT, shell=True)
+
         write_log(path_to_file='p7zip.txt', test=p7zip)
+
+
     except subprocess.CalledProcessError as error:
         write_log(path_to_file='errors/p7zip_errors.txt', test=error.output)
         error_continue = True
         return error_continue
-    return error_continue
 
 
 def stress_p7zip_func():
@@ -60,7 +64,7 @@ def stress_p7zip_func():
         input_err(name='CPU (p7zip)')
 
     else:
-        print(f'{" " * 50}\n' * int(len(sensors_list)))
+        print(f'{" " * 100}\n' * int(len(sensors_list)))
         os.write(fd, (UP) * (int(len(sensors_list) - 1)))
         status_file('7zip', 'complete', datetime_func())
         print(f"[{datetime_func()}] Успешно!\n\n")

@@ -1,11 +1,10 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import subprocess
 import re
 import os
 
-from error_loging import datetime_func, status_file
+from test_scripts.error_loging import datetime_func, status_file
 
 
 def usb_testing():
@@ -16,24 +15,32 @@ def usb_testing():
     dmesg_list = []
     status_file('USB', 'start', datetime_func())
     print(f"\n[{datetime_func()}] Тестирование USB...\n")
-    subprocess.call(['mkdir mountpoint'], shell=True, stderr=subprocess.DEVNULL)
+
+    subprocess.call(['mkdir mountpoint'],
+    shell=True, stderr=subprocess.DEVNULL)
+
     while usb_tester != 3:
         lsblk = subprocess.check_output(
-            ['lsblk /dev/sd[a-z][0-9] -npo KNAME,RM --list | grep " 1"'], shell=True,
-            stderr=subprocess.STDOUT).decode('utf8').split('\n')
+            ['lsblk /dev/sd[a-z][0-9] -npo KNAME,RM --list | grep " 1"'],
+            shell=True, stderr=subprocess.STDOUT).decode('utf8').split('\n')
+
         for name in lsblk:
             if str('1') in name.split(' ')[-1]:
                 if name not in usb_list and port not in dmesg_list:
                     name = name.split(' ')[0]
-                    subprocess.call([f'umount {name}'], shell=True, stderr=subprocess.DEVNULL)
+
+                    subprocess.call([f'umount {name}'],
+                    shell=True, stderr=subprocess.DEVNULL)
+
                     subprocess.call(
-                        [f'mount -r {name} /home/user/LinuxTesting/mountpoint'], shell=True,
-                        stderr=subprocess.DEVNULL)
+                        [f'mount -r {name} /home/user/LinuxTesting/mountpoint'],
+                        shell=True, stderr=subprocess.DEVNULL)
 
                     if 'linuxusbtestfile.txt' in os.listdir('mountpoint'):
                         device_id = subprocess.check_output(
-                            ['dmesg | grep "] usb-storage"'], shell=True,
-                            stderr=subprocess.STDOUT).decode('utf8').split('\n')[-2]
+                            ['dmesg | grep "] usb-storage"'],
+                            shell=True, stderr=subprocess.STDOUT).decode('utf8').split('\n')[-2]
+
                         port = re.findall(r'[0-9]-[0-9]\:[0-9].[0-9]', device_id)
                         usb_list.append(name)
                         dmesg_list.append(port)

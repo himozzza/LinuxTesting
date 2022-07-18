@@ -1,4 +1,3 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import os
@@ -22,7 +21,8 @@ def main():
     for dep in deps:
         try:
             subprocess.check_output(
-                [f'which {dep}'], shell=True, stderr=subprocess.STDOUT).decode('utf8')
+                [f'which {dep}'],
+                shell=True, stderr=subprocess.STDOUT).decode('utf8')
 
         except subprocess.CalledProcessError:
             if dep == 'beep':
@@ -32,7 +32,9 @@ def main():
                 no_deps.append(dep)
 
     if 'root' not in subprocess.check_output(
-        ['whoami'], shell=True, stderr=subprocess.STDOUT).decode('utf8'):
+        ['whoami'],
+        shell=True, stderr=subprocess.STDOUT).decode('utf8'):
+
         print("\nТребуется режим администратора.\nИспользуйте команду 'su -'.")
         input("\nНажмите Enter для выхода.\n")
         sys.exit()
@@ -40,10 +42,13 @@ def main():
     else:
         while len(no_deps) != 0:
             aptget = subprocess.call(
-                ['apt-get update'], shell=True, stderr=subprocess.STDOUT)
+                ['apt-get update'],
+                shell=True, stderr=subprocess.STDOUT)
+
             if 'E: Tried to dequeue a fetching object' in str(aptget):
-                subprocess.call(['apt-get update'], shell=True,
-                                stderr=subprocess.STDOUT)
+                subprocess.call(['apt-get update'],
+                shell=True, stderr=subprocess.STDOUT)
+
             else:
                 subprocess.call(
                     [f'apt-get install {" ".join(no_deps)}'], shell=True, stderr=subprocess.STDOUT)
@@ -78,6 +83,7 @@ def start_test():
         'cd /home/user/LinuxTesting/; mkdir logs &> /dev/null; mkdir logs/errors &> /dev/null')
     os.system(
         '\\cp test_scripts/config/status_config_original.json ./status.json &> /dev/null')
+
     if select == 1:
         usb_testing()
         iperf_func()

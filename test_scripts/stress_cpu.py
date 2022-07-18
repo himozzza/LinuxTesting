@@ -1,4 +1,3 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import subprocess
@@ -8,7 +7,7 @@ import sys
 from time import sleep
 from threading import Thread
 
-from error_loging import datetime_func, input_err, status_file, write_log
+from test_scripts.error_loging import datetime_func, input_err, status_file, write_log
 
 
 curses.setupterm()
@@ -22,7 +21,10 @@ def temperature():
     """Отслеживание температуры."""
     while True:
         sleep(1)
-        print(subprocess.check_output(['sensors | grep "Core [0-9]"'],shell=True).decode('utf8'))
+        print(subprocess.check_output(
+            ['sensors | grep "Core [0-9]"'],
+            shell=True).decode('utf8'))
+
         os.write(fd, (UP) * int(len(sensors_list)))
         sleep(2)
 
@@ -35,12 +37,13 @@ def testing():
         sysbench = subprocess.check_output(
             ['sysbench cpu --cpu-max-prime=100000000 --threads=4 --time=180 run'],
             stderr=subprocess.STDOUT, shell=True)
+
         write_log(path_to_file='sysbench.txt', test=sysbench)
+
     except subprocess.CalledProcessError as error:
         write_log(path_to_file='errors/sysbench_errors.txt', test=error.output)
         error_continue = True
         return error_continue
-    return error_continue
 
 
 def stress_cpu_func():

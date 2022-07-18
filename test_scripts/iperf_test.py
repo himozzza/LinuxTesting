@@ -1,10 +1,9 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import subprocess
 from time import sleep
 
-from error_loging import datetime_func, input_err, status_file, write_log
+from test_scripts.error_loging import datetime_func, input_err, status_file, write_log
 
 
 def iperf_func():
@@ -26,7 +25,9 @@ def iperf_func():
             continue
 
     hw_addr = subprocess.check_output(
-        ["ifconfig | grep HWaddr"], shell=True, stderr=subprocess.STDOUT).decode('utf8')
+        ["ifconfig | grep HWaddr"],
+        shell=True, stderr=subprocess.STDOUT).decode('utf8')
+
     i = 0
     for list_hw_addr in str(hw_addr).split('\n'):
         ethernet_list.append(''.join(str(list_hw_addr).split(" ", maxsplit=1)[0]))
@@ -42,13 +43,17 @@ def iperf_func():
     while len(ethernet_list) != eth_ports:
         for eth_list in ethernet_list:
             ip_addr = subprocess.check_output(
-                [f'ifconfig {eth_list}'], shell=True, stderr=subprocess.STDOUT).decode('utf8')
+                [f'ifconfig {eth_list}'],
+                shell=True, stderr=subprocess.STDOUT).decode('utf8')
+
             if 'inet addr' in ip_addr:
                 print(f"\n[{datetime_func()}] Тестирование Ethernet порта {eth_list} (iperf3)...")
                 sleep(5)
                 try:
                     iperf = subprocess.check_output(
-                        ['iperf3 -i 5 -t 60 -c 192.168.1.109'], shell=True,stderr=subprocess.STDOUT)
+                        ['iperf3 -i 5 -t 60 -c 192.168.1.109'],
+                        shell=True,stderr=subprocess.STDOUT)
+                        
                     write_log(path_to_file=f'iperf-{eth_list}.txt', test=iperf)
                     status_file('Ethernet', 'complete', datetime_func())
                     print(f"[{datetime_func()}] Успешно!\n\n")

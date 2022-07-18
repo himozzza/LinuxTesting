@@ -1,4 +1,3 @@
-"""Вызов интерпретатора."""
 #!/usr/bin/python3
 
 import json
