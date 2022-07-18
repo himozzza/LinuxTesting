@@ -14,14 +14,16 @@ def stress_io_func():
     settings = []
 
     lsblk = subprocess.check_output(
-        ['lsblk -dnpo KNAME --list'],
+        ['lsblk -dnpo KNAME,RM --list'],
         shell=True, stderr=subprocess.STDOUT).decode('utf8')
 
-    for name in lsblk:
-        if str('1') not in subprocess.check_output(
-            ['lsblk {name} -no RM'],
-            shell=True, stderr=subprocess.STDOUT).decode('utf8'):
-            jobs.append(name)
+    for name in lsblk.split('\n'):
+        try:
+            if str('1') not in name.split(' ')[-1]:
+                jobs.append(name.split(' ', maxsplit=1)[0])
+        except subprocess.CalledProcessError:
+            pass
+    jobs.remove('')
 
     with open('test_scripts/config/fio_config_original', 'r', encoding='utf-8') as fio_config:
         work_config = fio_config.read().split(' ')
@@ -29,14 +31,13 @@ def stress_io_func():
     work_config.pop(0)
 
     for work, job in zip(work_config, jobs):
-        re.sub(r'^filename=$',
-               f'filename={job}/testfile', work, flags=re.MULTILINE)
-               
         if '/' in re.findall(r'/$', subprocess.check_output(
-            [f'lsblk {job} -npno NAME,MOUNTPOINTS --list'],
+            [f'lsblk {job} -npno NAME,MOUNTPOINT --list'],
             shell=True).decode('utf8'), flags=re.MULTILINE):
 
             work = f'{work}rw=read\n'
+
+        work = re.sub(r'^filename=$', f'filename={job}', work, flags=re.MULTILINE)
         settings.append(work)
 
     with open('test_scripts/config/fio_config', 'w', encoding='utf-8') as write_line:

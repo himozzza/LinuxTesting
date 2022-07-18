@@ -51,7 +51,7 @@ def testing_mem():
 
     try:
         memtester = subprocess.check_output(
-            ['stress-ng --vm 4 --vm-bytes 75% --vm-method all --verify -t 10m -v'],
+            ['stress-ng --vm 4 --vm-bytes 75% --vm-method all --verify -t 300m -v'],
             shell=True, stderr=subprocess.STDOUT)
 
         # memtester = subprocess.check_output(

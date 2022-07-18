@@ -33,7 +33,6 @@ def iperf_func():
         ethernet_list.append(''.join(str(list_hw_addr).split(" ", maxsplit=1)[0]))
         i =+ 1
     ethernet_list.remove('')
-    print(f'Обнаружено {i} Ethernet портов.')
 
     if eth_ports == 0:
         eth_ports = 2
@@ -53,7 +52,7 @@ def iperf_func():
                     iperf = subprocess.check_output(
                         ['iperf3 -i 5 -t 60 -c 192.168.1.109'],
                         shell=True,stderr=subprocess.STDOUT)
-                        
+
                     write_log(path_to_file=f'iperf-{eth_list}.txt', test=iperf)
                     status_file('Ethernet', 'complete', datetime_func())
                     print(f"[{datetime_func()}] Успешно!\n\n")

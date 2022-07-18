@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+from re import sub
 from time import sleep
 import subprocess
 import sys
@@ -56,6 +57,27 @@ def main():
 
     os.system('clear')
     sleep(0.5)
+
+
+def main_local():
+    """Подготовка зависимостей."""
+    deps = ['memtester', 'stress-ng', 'fio', 'sysbench', 'beep', 'iperf3']
+    no_deps = []
+
+    for dep in deps:
+        if subprocess.call(
+            [f'which {dep}'],
+            shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL) != 0:
+            no_deps.append(dep)
+
+    if len(no_deps) == 0:
+        subprocess.call(
+            ['apt-get install dependencies/*.rpm'],
+            shell=True, stderr=subprocess.STDOUT)
+
+    os.system('clear')
+    sleep(0.5)
+
 
 def start_test():
     """Начало тестирования."""
@@ -113,9 +135,17 @@ def start_test():
 
 if __name__ == '__main__':
     try:
-        main()
-        start_test()
+        if subprocess.call(
+            ['ping -c 1 yandex.ru'],
+            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
+            main_local()
+            start_test()
+
+        else:
+            main()
+            start_test()
+
     except KeyboardInterrupt:
         print("\n\n\n\n\nВыходим...\n\n")
         sleep(1)
-        quit()
+        sys.exit()
