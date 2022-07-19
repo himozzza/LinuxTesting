@@ -42,8 +42,13 @@ def free_mem():
 
 def testing_mem():
     """Подсчет памяти для тестирования и тестирование."""
+    cpu_threads = subprocess.check_output(
+        ['lscpu | grep -i "^cpu(s):"'],
+        shell=True, stderr=subprocess.DEVNULL).decode(
+            'utf8').rsplit(' ', maxsplit=1)[-1].split('\n')[0]
+
     status_file('Memory', 'start', datetime_func())
-    print(f"\n[{datetime_func()}] Тестирование памяти (Stress-ng)...")
+    print(f"\n[{datetime_func()}] Тестирование памяти (Stress-ng Memory)...")
     # call_memory = subprocess.check_output(
     #     ['cat /proc/meminfo | grep "MemFree"'], stderr=subprocess.STDOUT, shell=True).decode(
     #         'utf8').split(" ")[-2]
@@ -51,7 +56,7 @@ def testing_mem():
 
     try:
         memtester = subprocess.check_output(
-            ['stress-ng --vm 4 --vm-bytes 75% --vm-method all --verify -t 300m -v'],
+            [f'stress-ng --vm {cpu_threads} --vm-bytes 90% --vm-method all --verify -t 30m -v'],
             shell=True, stderr=subprocess.STDOUT)
 
         # memtester = subprocess.check_output(
@@ -72,14 +77,14 @@ def stress_mem_func():
     thr2 = Thread(target=free_mem, daemon=True)
     thr1.start()
     thr2.start()
-    error_continue = False
     thr1.join()
+    error_continue = False
 
     if error_continue is True:
         print(f'{" " * int(len(memory_lines[0]))}\n' * int(len(memory_lines)))
         os.write(fd, (UP) * (int(len(memory_lines) - 1)))
         status_file('Memory', 'ERROR', datetime_func())
-        input_err(name='памяти (Stress-ng)')
+        input_err(name='памяти (Stress-ng Memory)')
 
     else:
         print(f'{" " * 100}\n' * int(len(memory_lines)))

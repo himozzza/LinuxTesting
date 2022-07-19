@@ -15,7 +15,7 @@
         "status": "stop",
         "time": null
     },
-    "Sysbench CPU": {
+    "Stress_ng CPU": {
         "status": "stop",
         "time": null
     },

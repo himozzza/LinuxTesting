@@ -81,6 +81,7 @@ def main_local():
 
 def start_test():
     """Начало тестирования."""
+
     print("\nВарианты Тестирования: \n\n\
             1. Тест всех устройств.\n\
             2. Тест USB портов.\n\
@@ -146,6 +147,8 @@ if __name__ == '__main__':
             start_test()
 
     except KeyboardInterrupt:
+        os.system('clear')
+        sleep(1)
         print("\n\n\n\n\nВыходим...\n\n")
         sleep(1)
         sys.exit()

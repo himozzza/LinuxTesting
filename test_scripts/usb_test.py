@@ -20,7 +20,7 @@ def usb_testing():
     subprocess.call(['mkdir mountpoint'],
     shell=True, stderr=subprocess.DEVNULL)
 
-    while usb_tester != 3:
+    while usb_tester != 2:
         while lsblk_check is False:
             try:
                 lsblk = subprocess.check_output(
@@ -57,7 +57,7 @@ def usb_testing():
                             usb_tester += 1
 
 
-    if usb_tester == 3:
+    if usb_tester == 2:
         os.system('while [[ $(findmnt mountpoint) != "" ]];\
              do umount mountpoint; done &> /dev/null')
         os.system('\\rm -r mountpoint &> /dev/null')

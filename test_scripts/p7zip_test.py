@@ -16,7 +16,7 @@ fd = sys.stdout.fileno()
 
 
 sensors_list = subprocess.check_output(
-    ['sensors | grep "Core [0-9]"'],
+    ['sensors | grep "Node [0-9] Max"'],
     shell=True).decode('utf8').split('\n')
 
 
@@ -24,7 +24,7 @@ def temperature():
     """Отслеживание температуры."""
     while True:
         sleep(1)
-        print(subprocess.check_output(['sensors | grep "Core [0-9]"'],shell=True).decode('utf8'))
+        print(subprocess.check_output(['sensors | grep "Node [0-9] Max"'],shell=True).decode('utf8'))
         os.write(fd, (UP) * int(len(sensors_list)))
         sleep(2)
 
