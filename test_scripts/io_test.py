@@ -52,6 +52,7 @@ def stress_io_func():
         write_log(path_to_file='fio.txt', test=stress_io)
         status_file('Fio I/O', 'complete', datetime_func())
         print(f"[{datetime_func()}] Успешно!\n\n")
+        subprocess.call(['\\rm *.log'], shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
     except subprocess.CalledProcessError as error:
         write_log(path_to_file='errors/fio_errors.txt', test=error.output)
