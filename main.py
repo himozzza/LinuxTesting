@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-from re import sub
 from time import sleep
 import subprocess
 import sys
@@ -14,60 +13,60 @@ from test_scripts.usb_test import usb_testing
 sys.path.append('./test_scripts/')
 
 
+# def main():
+#     """Подготовка зависимостей."""
+#     deps = ['memtester', 'stress-ng', 'fio', 'sysbench', 'beep', 'iperf3']
+#     no_deps = []
+
+#     for dep in deps:
+#         try:
+#             subprocess.check_output(
+#                 [f'which {dep}'],
+#                 shell=True, stderr=subprocess.STDOUT).decode('utf8')
+
+#         except subprocess.CalledProcessError:
+#             if dep == 'beep':
+#                 dep = 'beep-speaker'
+#                 no_deps.append(dep)
+#             else:
+#                 no_deps.append(dep)
+
+#     if 'root' not in subprocess.check_output(
+#         ['whoami'],
+#         shell=True, stderr=subprocess.STDOUT).decode('utf8'):
+
+#         print("\nТребуется режим администратора.\nИспользуйте команду 'su -'.")
+#         input("\nНажмите Enter для выхода.\n")
+#         sys.exit()
+
+#     else:
+#         while len(no_deps) != 0:
+#             aptget = subprocess.call(
+#                 ['apt-get update'],
+#                 shell=True, stderr=subprocess.STDOUT)
+
+#             if 'E: Tried to dequeue a fetching object' in str(aptget):
+#                 subprocess.call(['apt-get update'],
+#                 shell=True, stderr=subprocess.STDOUT)
+
+#             else:
+#                 subprocess.call(
+#                     [f'apt-get install {" ".join(no_deps)}'], shell=True, stderr=subprocess.STDOUT)
+#                 no_deps = []
+
+#     os.system('clear')
+#     sleep(0.5)
+
+
 def main():
     """Подготовка зависимостей."""
-    deps = ['memtester', 'stress-ng', 'fio', 'sysbench', 'beep', 'iperf3']
-    no_deps = []
-
-    for dep in deps:
-        try:
-            subprocess.check_output(
-                [f'which {dep}'],
-                shell=True, stderr=subprocess.STDOUT).decode('utf8')
-
-        except subprocess.CalledProcessError:
-            if dep == 'beep':
-                dep = 'beep-speaker'
-                no_deps.append(dep)
-            else:
-                no_deps.append(dep)
-
-    if 'root' not in subprocess.check_output(
-        ['whoami'],
-        shell=True, stderr=subprocess.STDOUT).decode('utf8'):
-
-        print("\nТребуется режим администратора.\nИспользуйте команду 'su -'.")
-        input("\nНажмите Enter для выхода.\n")
-        sys.exit()
-
-    else:
-        while len(no_deps) != 0:
-            aptget = subprocess.call(
-                ['apt-get update'],
-                shell=True, stderr=subprocess.STDOUT)
-
-            if 'E: Tried to dequeue a fetching object' in str(aptget):
-                subprocess.call(['apt-get update'],
-                shell=True, stderr=subprocess.STDOUT)
-
-            else:
-                subprocess.call(
-                    [f'apt-get install {" ".join(no_deps)}'], shell=True, stderr=subprocess.STDOUT)
-                no_deps = []
-
-    os.system('clear')
-    sleep(0.5)
-
-
-def main_local():
-    """Подготовка зависимостей."""
-    deps = ['memtester', 'stress-ng', 'fio', 'sysbench', 'beep', 'iperf3']
+    deps = ['stress-ng', 'fio', 'iperf3']
     no_deps = []
 
     for dep in deps:
         if subprocess.call(
             [f'which {dep}'],
-            shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL) != 0:
+            shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL) != 1:
             no_deps.append(dep)
 
     if len(no_deps) == 0:
@@ -136,15 +135,8 @@ def start_test():
 
 if __name__ == '__main__':
     try:
-        if subprocess.call(
-            ['ping -c 1 yandex.ru'],
-            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) != 0:
-            main_local()
-            start_test()
-
-        else:
-            main()
-            start_test()
+        main()
+        start_test()
 
     except KeyboardInterrupt:
         os.system('clear')

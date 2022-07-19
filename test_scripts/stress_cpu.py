@@ -33,13 +33,14 @@ def testing():
     """Тестирование CPU."""
     cpu_threads = subprocess.check_output(
         ['lscpu | grep -i "^cpu(s):"'],
-        shell=True, stderr=subprocess.DEVNULL).decode('utf8').split(' ')[-1].split('\n')[0]
+        shell=True, stderr=subprocess.DEVNULL).decode('utf8').rsplit(
+            ' ', maxsplit=1)[-1].split('\n')[0]
 
     status_file('Stress_ng CPU', 'start', datetime_func())
     print(f"\n[{datetime_func()}] Тестирование CPU (stress_ng CPU)...")
     try:
         stress_ng = subprocess.check_output(
-            [f'stress-ng --cpu {cpu_threads} --cpu-method all --verify -t 5m --metrics-brief'],
+            [f'stress-ng --cpu {cpu_threads} --cpu-method all --verify -t 30m --metrics-brief'],
             stderr=subprocess.STDOUT, shell=True)
 
         write_log(path_to_file='stress_ng.txt', test=stress_ng)

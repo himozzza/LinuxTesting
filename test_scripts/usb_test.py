@@ -11,7 +11,6 @@ def usb_testing():
     """Тестирование USB."""
     lsblk_check = False
     usb_tester = 0
-#    os.system('modprobe pcspkr')
     usb_list = []
     dmesg_list = []
     status_file('USB', 'start', datetime_func())

@@ -28,10 +28,10 @@ def iperf_func():
         ["ifconfig | grep HWaddr"],
         shell=True, stderr=subprocess.STDOUT).decode('utf8')
 
-    i = 0
+
     for list_hw_addr in str(hw_addr).split('\n'):
         ethernet_list.append(''.join(str(list_hw_addr).split(" ", maxsplit=1)[0]))
-        i =+ 1
+
     ethernet_list.remove('')
 
     if eth_ports == 0:
